@@ -1,5 +1,7 @@
 import express from "express";
-import { signUP } from "./user.controller.js"; 
+import { signUP , login } from "./user.controller.js"; 
+import { checkEmail } from "../../middleware/checkEmail.js";
 
 export const userRoutes = express.Router();
-userRoutes.post('/signup', signUP);
+userRoutes.post('/signup', checkEmail, signUP);
+userRoutes.post("/login", login);
