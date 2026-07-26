@@ -1,6 +1,10 @@
 import express from "express";
+import { dbConnection } from "./db/dbConnection.js";
 
 const app = express();
+
+dbConnection();
+
 app.get('/', (req, res) => {
     res.send("Hello World");
 });
