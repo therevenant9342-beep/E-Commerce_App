@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import { dbConnection } from "./db/dbConnection.js";
 import { userRoutes } from "./src/modules/user/user.routes.js";
 import { productRoutes } from "./src/modules/products/product.routes.js";
@@ -7,6 +8,8 @@ import { cartRoutes } from "./src/modules/cart/cart.routes.js";
 import { orderRoutes } from "./src/modules/order/order.routes.js";
 
 const app = express();
+
+app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(express.json());
 
 dbConnection();

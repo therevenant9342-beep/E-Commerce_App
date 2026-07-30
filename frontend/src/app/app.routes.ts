@@ -17,5 +17,5 @@ export const routes: Routes = [
   { path: 'checkout', component: Checkout },
   { path: 'about', component: About },
   { path: 'contact', component: Contact },
-  { path: '**', redirectTo: '' } 
+  { path: '**', redirectTo: '' }
 ];

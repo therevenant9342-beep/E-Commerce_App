@@ -1,1 +1,21 @@
-<p>products works!</p>
+<div class="products-container">
+    <h2>Featured Collection</h2>
+
+    <div class="product-grid">
+        @for (product of productsList; track product.id) {
+        <div class="product-card">
+            <div class="image-container">
+                <img [src]="product.image" [alt]="product.title">
+            </div>
+            <div class="product-info">
+                <span class="category">{{ product.category }}</span>
+                <h3 class="title">{{ product.title }}</h3>
+                <span class="price">${{ product.price }}</span>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+        } @empty {
+        <p class="loading">Loading inventory...</p>
+        }
+    </div>
+</div>
