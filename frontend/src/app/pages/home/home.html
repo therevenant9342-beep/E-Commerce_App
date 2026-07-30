@@ -1,11 +1,31 @@
 <div class="home-container">
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome to E-Commerce</h1>
-            <p>Discover the best products at unbeatable prices.</p>
-            <button routerLink="/products" class="cta-button">Shop Now</button>
+    <section class="hero-slider">
+    
+        @for (slide of slides; track $index) {
+        @if ($index === currentSlide) {
+        <div class="slide" [style.backgroundImage]="'url(' + slide.image + ')'">
+            <div class="hero-content">
+                <h1>{{ slide.title }}</h1>
+                <p>{{ slide.subtitle }}</p>
+                <button routerLink="/products" class="cta-button">Shop Now</button>
+            </div>
         </div>
+        }
+        }
+    
+        <!-- Slider Controls -->
+        <button class="slider-nav prev" (click)="prevSlide()">&#10094;</button>
+        <button class="slider-nav next" (click)="nextSlide()">&#10095;</button>
+    
+        <!-- Slide Indicators -->
+        <div class="slider-dots">
+            @for (slide of slides; track $index) {
+            <span class="dot" [class.active]="$index === currentSlide" (click)="currentSlide = $index">
+            </span>
+            }
+        </div>
+    
     </section>
 
     <section class="trending">
