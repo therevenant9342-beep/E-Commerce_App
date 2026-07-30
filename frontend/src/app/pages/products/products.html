@@ -1,21 +1,36 @@
 <div class="products-container">
-    <h2>Featured Collection</h2>
 
-    <div class="product-grid">
-        @for (product of productsList; track product.id) {
-        <div class="product-card">
-            <div class="image-container">
-                <img [src]="product.image" [alt]="product.title">
-            </div>
-            <div class="product-info">
-                <span class="category">{{ product.category }}</span>
-                <h3 class="title">{{ product.title }}</h3>
-                <span class="price">${{ product.price }}</span>
-                <button class="add-to-cart">Add to Cart</button>
-            </div>
+    <aside class="sidebar">
+        <h3>Search</h3>
+        <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search products...">
+
+        <h3>Categories</h3>
+        <select [(ngModel)]="selectedCategory" (change)="applyFilters()">
+            <option value="">All Categories</option>
+            @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+            }
+        </select>
+
+        <h3>Price Range</h3>
+        <div class="price-inputs">
+            <input type="number" [(ngModel)]="minPrice" (input)="applyFilters()" placeholder="Min ($)">
+            <span>-</span>
+            <input type="number" [(ngModel)]="maxPrice" (input)="applyFilters()" placeholder="Max ($)">
         </div>
-        } @empty {
-        <p class="loading">Loading inventory...</p>
+
+        <button (click)="resetFilters()" class="reset-btn">Clear Filters</button>
+    </aside>
+
+    <main class="product-grid">
+        @for (product of filteredProducts; track product._id) {
+        <div class="product-card">
+            <img [src]="product.image" [alt]="product.title">
+            <h4>{{ product.title }}</h4>
+            <p>${{ product.price }}</p>
+            <button>Add to Cart</button>
+        </div>
         }
-    </div>
+    </main>
+
 </div>

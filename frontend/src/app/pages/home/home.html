@@ -46,11 +46,18 @@
 
     <section class="news">
         <h2>Latest News</h2>
-        <div class="news-placeholder">
-            <article>
-                <h3>New Arrivals for the Season</h3>
-                <p>Check out our latest collection dropping this weekend.</p>
+        <div class="news-grid">
+            @for (article of newsArticles; track article.title) {
+            <article class="news-card">
+                <span class="news-date">{{ article.date }}</span>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.excerpt }}</p>
+    
+                <!-- Replace the old href="#" with this routerLink -->
+                <a routerLink="/products">Shop Collection &rarr;</a>
+    
             </article>
+            }
         </div>
     </section>
 

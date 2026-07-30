@@ -172,3 +172,54 @@ h2 {
     margin-top: 12px;
     cursor: pointer;
 }
+
+.news-grid {
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.news-card {
+    flex: 1;
+    min-width: 300px;
+    background-color: #f9f9f9;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid #eaeaea;
+    transition: transform 0.2s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+}
+
+.news-date {
+    font-size: 13px;
+    color: #888;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.news-card h3 {
+    font-size: 20px;
+    margin: 0 0 12px 0;
+    color: #1a1a1a;
+}
+
+.news-card p {
+    color: #4a4a4a;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.news-card a {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.news-card a:hover {
+    text-decoration: underline;
+}
