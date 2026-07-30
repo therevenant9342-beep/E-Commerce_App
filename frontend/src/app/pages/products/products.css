@@ -209,3 +209,11 @@ img {
 .product-card button:hover {
     background-color: #333;
 }
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}

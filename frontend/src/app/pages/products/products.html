@@ -23,12 +23,17 @@
     </aside>
 
     <main class="product-grid">
-        @for (product of filteredProducts; track product._id) {
+        @for (product of filteredProducts; track product.id || product._id) {
         <div class="product-card">
-            <img [src]="product.image" [alt]="product.title">
-            <h4>{{ product.title }}</h4>
-            <p>${{ product.price }}</p>
+    
+            <a [routerLink]="['/products', product.id || product._id]" class="card-link">
+                <img [src]="product.image" [alt]="product.title">
+                <h4>{{ product.title }}</h4>
+                <p>${{ product.price }}</p>
+            </a>
+    
             <button>Add to Cart</button>
+    
         </div>
         }
     </main>
