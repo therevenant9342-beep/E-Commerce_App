@@ -1,1 +1,37 @@
-<p>home works!</p>
+<div class="home-container">
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to E-Commerce</h1>
+            <p>Discover the best products at unbeatable prices.</p>
+            <button routerLink="/products" class="cta-button">Shop Now</button>
+        </div>
+    </section>
+
+    <section class="trending">
+        <h2>Trending Products</h2>
+    
+        <div class="product-grid">
+            @for (product of trendingProducts; track product._id) {
+            <div class="product-card">
+                <!-- Real image tag binding to your database field -->
+                <img [src]="product.image" [alt]="product.title" class="product-image">
+                <h3>{{ product.title }}</h3>
+                <p>${{ product.price }}</p>
+                <button>Add to Cart</button>
+            </div>
+            }
+        </div>
+    </section>
+
+    <section class="news">
+        <h2>Latest News</h2>
+        <div class="news-placeholder">
+            <article>
+                <h3>New Arrivals for the Season</h3>
+                <p>Check out our latest collection dropping this weekend.</p>
+            </article>
+        </div>
+    </section>
+
+</div>
