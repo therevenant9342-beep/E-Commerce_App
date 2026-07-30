@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product/product'; 
+import { CartService } from '../../services/cart/cart';
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,10 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService 
+  ) {}
 
   ngOnInit() {
     this.productService.getProducts().subscribe({
@@ -54,5 +58,9 @@ export class HomeComponent implements OnInit {
 
   prevSlide() {
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+  }
+
+  addToCart(product: any) {
+    this.cartService.addToCart(product);
   }
 }
