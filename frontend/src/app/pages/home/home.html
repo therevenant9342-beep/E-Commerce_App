@@ -1,7 +1,7 @@
 <div class="home-container">
 
     <section class="hero-slider">
-    
+
         @for (slide of slides; track $index) {
         @if ($index === currentSlide) {
         <div class="slide" [style.backgroundImage]="'url(' + slide.image + ')'">
@@ -13,32 +13,29 @@
         </div>
         }
         }
-    
-        <!-- Slider Controls -->
+
         <button class="slider-nav prev" (click)="prevSlide()">&#10094;</button>
         <button class="slider-nav next" (click)="nextSlide()">&#10095;</button>
-    
-        <!-- Slide Indicators -->
+
         <div class="slider-dots">
             @for (slide of slides; track $index) {
             <span class="dot" [class.active]="$index === currentSlide" (click)="currentSlide = $index">
             </span>
             }
         </div>
-    
+
     </section>
 
     <section class="trending">
         <h2>Trending Products</h2>
-    
+
         <div class="product-grid">
             @for (product of trendingProducts; track product._id) {
-            <div class="product-card">
-                <!-- Real image tag binding to your database field -->
+            <div class="product-card" [routerLink]="['/products', product._id]" style="cursor: pointer;">
                 <img [src]="product.image" [alt]="product.title" class="product-image">
                 <h3>{{ product.title }}</h3>
                 <p>${{ product.price }}</p>
-                <button class="add-to-cart-btn" (click)="addToCart(product)">Add to Cart</button>
+                <button class="add-to-cart-btn" (click)="addToCart(product); $event.stopPropagation()">Add to Cart</button>
             </div>
             }
         </div>
@@ -52,10 +49,7 @@
                 <span class="news-date">{{ article.date }}</span>
                 <h3>{{ article.title }}</h3>
                 <p>{{ article.excerpt }}</p>
-    
-                <!-- Replace the old href="#" with this routerLink -->
                 <a routerLink="/products">Shop Collection &rarr;</a>
-    
             </article>
             }
         </div>
