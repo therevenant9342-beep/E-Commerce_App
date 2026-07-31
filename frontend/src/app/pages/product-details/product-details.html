@@ -24,7 +24,7 @@
         <h3 class="price">${{ product.price }}</h3>
         <p class="description">{{ product.description }}</p>
     
-        <button class="add-to-cart-btn" (click)="addToCart()">Add to Cart</button>        <br>
+        <button class="add-to-cart-btn" (click)="addToCart(product)">Add to Cart</button>        <br>
         <a routerLink="/products" class="back-link">&larr; Back to Products</a>
     </div>
 </div>

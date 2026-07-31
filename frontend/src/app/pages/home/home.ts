@@ -67,16 +67,14 @@ export class HomeComponent implements OnInit {
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
   }
 
-  onAddToCart(product: Product, event: Event) {
-    event.stopPropagation();
-    
-    if (!this.authService.isLoggedIn()) {
-      this.toastr.warning('Please log in first to add items to your cart.', 'Authentication Required');
-      this.router.navigate(['/login']);
-      return;
-    }
+  addToCart(product: Product, event: Event) {
+  event.stopPropagation();
 
-    this.cartService.addToCart(product);
-    this.toastr.success('Item added to cart!', 'Success');
-  }
+  this.cartService.addToCart(product).subscribe({
+    next: (res) => {
+      this.toastr.success('Item added to cart!', 'Success');
+    },
+    error: (err) => console.error(err)
+  });
+}
 }

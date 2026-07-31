@@ -4,7 +4,7 @@ import { ProductsComponent } from './pages/products/products';
 import { RegisterComponent } from './pages/register/register';
 import { LoginComponent } from './pages/login/login';
 import { CartComponent } from './pages/cart/cart';
-import { Checkout } from './pages/checkout/checkout';
+import { CheckoutComponent } from './pages/checkout/checkout';
 import { About } from './pages/about/about';
 import { Contact } from './pages/contact/contact';
 import { ProductDetailsComponent } from './pages/product-details/product-details';
@@ -17,7 +17,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   
   { path: 'cart', component: CartComponent, canActivate: [authGuard] },
-  { path: 'checkout', component: Checkout, canActivate: [authGuard] },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
   
   { path: 'about', component: About },
   { path: 'contact', component: Contact },

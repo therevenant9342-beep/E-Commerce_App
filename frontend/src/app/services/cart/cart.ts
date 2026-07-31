@@ -1,14 +1,22 @@
-import { Injectable, signal, computed } from '@angular/core';
+// cart.ts
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Product } from '../../models/product.model';
+import { tap } from 'rxjs/operators';
+
 export interface CartItem {
   product: Product;
   quantity: number;
+  _id?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
+  http = inject(HttpClient);
+  baseUrl = 'http://localhost:3000/cart';
+
   cartItems = signal<CartItem[]>([]);
 
   cartTotal = computed(() => {
@@ -19,28 +27,50 @@ export class CartService {
     return this.cartItems().reduce((count, item) => count + item.quantity, 0);
   });
 
-  addToCart(product: Product) {
-    this.cartItems.update(items => {
-      const existingItem = items.find(i => i.product._id === product._id);
-      if (existingItem) {
-        existingItem.quantity += 1;
-        return [...items];
-      }
-      return [...items, { product, quantity: 1 }];
+  private getHeaders() {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
     });
   }
 
-  removeFromCart(productId: string) {
-    this.cartItems.update(items => items.filter(item => item.product._id !== productId));
+  getCart() {
+    this.http.get<{ cart: { cartItems: CartItem[] } }>(this.baseUrl, { headers: this.getHeaders() }).subscribe({
+      next: (res) => this.cartItems.set(res.cart?.cartItems || []),
+      error: (err) => console.error('Failed to get cart:', err)
+    });
   }
 
+  addToCart(product: Product) {
+    return this.http.post<{ cart: { cartItems: CartItem[] } }>(
+      this.baseUrl, 
+      { productId: product._id },
+      { headers: this.getHeaders() }
+    ).pipe(
+      tap(res => this.cartItems.set(res.cart.cartItems))
+    );
+  }
+
+ removeFromCart(productId: string) {
+  this.http.delete<{ cart: { cartItems: CartItem[] } }>(
+    `${this.baseUrl}/${productId}`,
+    { headers: this.getHeaders() }
+  ).subscribe({
+    next: () => {
+      this.getCart();
+    },
+    error: (err) => console.error('Failed to remove item:', err)
+  });
+}
+
   updateQuantity(productId: string, quantity: number) {
-    this.cartItems.update(items => {
-      const item = items.find(i => i.product._id === productId);
-      if (item) {
-        item.quantity = quantity;
-      }
-      return [...items];
+    this.http.put<{ cart: { cartItems: CartItem[] } }>(
+      this.baseUrl, 
+      { productId, quantity },
+      { headers: this.getHeaders() }
+    ).subscribe({
+      next: (res) => this.cartItems.set(res.cart.cartItems),
+      error: (err) => console.error('Failed to update quantity:', err)
     });
   }
 }

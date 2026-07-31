@@ -49,16 +49,12 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  addToCart() {
-    if (this.product) {
-      if (!this.authService.isLoggedIn()) {
-        this.toastr.warning('Please log in first to add items to your cart.', 'Authentication Required');
-        this.router.navigate(['/login']);
-        return; 
-      }
-      
-      this.cartService.addToCart(this.product);
+  addToCart(product: Product) {
+  this.cartService.addToCart(product).subscribe({
+    next: () => {
       this.toastr.success('Item added to cart!', 'Success');
-    }
-  }
+    },
+    error: (err) => console.error(err)
+  });
+}
 }

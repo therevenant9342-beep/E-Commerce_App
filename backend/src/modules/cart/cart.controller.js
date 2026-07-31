@@ -12,6 +12,9 @@ const addToCart = async (req, res) => {
                 user: userId,
                 cartItems: [{ product: productId, quantity: quantity || 1 }]
             });
+            
+            await cart.populate('cartItems.product');
+            
             return res.status(201).json({ message: "Cart created and product added", cart });
         }
 
@@ -24,6 +27,8 @@ const addToCart = async (req, res) => {
         }
 
         await cart.save();
+        await cart.populate('cartItems.product');
+        
         res.status(200).json({ message: "Product added to cart", cart });
 
     } catch (error) {
@@ -45,4 +50,25 @@ const getCart = async (req, res) => {
     }
 };
 
-export { addToCart, getCart };
+const removeFromCart = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const userId = req.user.id;
+
+        const cart = await cartModel.findOneAndUpdate(
+            { user: userId },
+            { $pull: { cartItems: { product: productId } } },
+            { new: true }
+        ).populate('cartItems.product');
+
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
+
+        res.status(200).json({ message: "Product removed from cart", cart });
+    } catch (error) {
+        res.status(500).json({ message: "Error removing from cart", error: error.message });
+    }
+};
+
+export { addToCart, getCart, removeFromCart };
