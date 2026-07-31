@@ -25,7 +25,9 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (res) => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/login'], { 
+            state: { requireEmailConfirmation: true } 
+          });
         },
         error: (err) => console.error(err)
       });
