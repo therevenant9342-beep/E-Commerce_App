@@ -7,24 +7,28 @@
     <div class="info-section">
         <h2>{{ product.title }}</h2>
         <p class="category">{{ product.category }}</p>
-    
+
         @if (product.rating) {
         <div class="rating">
             <span>⭐ {{ product.rating.rate }}</span>
             <span>({{ product.rating.count }} reviews)</span>
         </div>
         }
-    
+
         @if ((product.stock ?? 0) > 0) {
         <span class="stock-badge">In Stock: {{ product.stock }}</span>
         } @else {
         <span class="out-of-stock">Out of Stock</span>
         }
-    
+
         <h3 class="price">${{ product.price }}</h3>
         <p class="description">{{ product.description }}</p>
-    
-        <button class="add-to-cart-btn" (click)="addToCart(product)">Add to Cart</button>        <br>
+
+        <button class="add-to-cart-btn" (click)="addToCart(product)" [disabled]="(product.stock ?? 0) === 0"
+            [class.disabled-btn]="(product.stock ?? 0) === 0">
+            Add to Cart
+        </button>
+        <br>
         <a routerLink="/products" class="back-link">&larr; Back to Products</a>
     </div>
 </div>

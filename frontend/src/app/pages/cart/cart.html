@@ -16,8 +16,8 @@
             <div>
                 <h3>{{ item.product.title }}</h3>
                 <p>Price: ${{ item.product.price }}</p>
-                <input type="number" [value]="item.quantity" (change)="changeQuantity(item.product._id, $event)"
-                    min="1">
+                <input type="number" [value]="item.quantity" (change)="changeQuantity(item, $event)" min="1"
+                    [max]="item.product.stock">
                 <button (click)="removeItem(item.product._id)">Remove</button>
             </div>
         </div>

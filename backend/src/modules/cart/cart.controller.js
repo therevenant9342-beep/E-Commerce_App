@@ -71,4 +71,32 @@ const removeFromCart = async (req, res) => {
     }
 };
 
-export { addToCart, getCart, removeFromCart };
+const updateCartQuantity = async (req, res) => {
+    try {
+        const { productId, quantity } = req.body;
+        const userId = req.user.id;
+
+        const cart = await cartModel.findOne({ user: userId });
+
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
+
+        const productIndex = cart.cartItems.findIndex(item => item.product.toString() === productId);
+
+        if (productIndex > -1) {
+            cart.cartItems[productIndex].quantity = quantity;
+            await cart.save();
+            await cart.populate('cartItems.product');
+            
+            res.status(200).json({ message: "Cart quantity updated", cart });
+        } else {
+            res.status(404).json({ message: "Product not found in cart" });
+        }
+
+    } catch (error) {
+        res.status(500).json({ message: "Error updating cart", error: error.message });
+    }
+};
+
+export { addToCart, getCart, removeFromCart, updateCartQuantity };

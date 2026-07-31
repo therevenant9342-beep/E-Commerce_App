@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. Added ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { ProductService } from '../../services/product/product';
 import { CartService } from '../../services/cart/cart';
@@ -50,11 +50,16 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart(product: Product) {
-  this.cartService.addToCart(product).subscribe({
-    next: () => {
-      this.toastr.success('Item added to cart!', 'Success');
-    },
-    error: (err) => console.error(err)
-  });
-}
+    if ((product.stock ?? 0) === 0) {
+      this.toastr.error('This item is currently out of stock.', 'Out of Stock');
+      return;
+    }
+
+    this.cartService.addToCart(product).subscribe({
+      next: () => {
+        this.toastr.success('Item added to cart!', 'Success');
+      },
+      error: (err) => console.error(err)
+    });
+  }
 }
