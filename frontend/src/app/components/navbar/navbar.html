@@ -9,13 +9,17 @@
         <li><a routerLink="/contact">Contact</a></li>
     </ul>
     <ul class="auth-links">
+        @if (isLoggedIn$ | async) {
         <a routerLink="/cart">
             Cart
             @if (cartService.itemCount() > 0) {
             <span class="cart-badge">{{ cartService.itemCount() }}</span>
             }
         </a>
+        <li><a (click)="logout()" style="cursor: pointer;">Logout</a></li>
+        } @else {
         <li><a routerLink="/login">Login</a></li>
         <li><a routerLink="/register">Register</a></li>
+        }
     </ul>
 </nav>

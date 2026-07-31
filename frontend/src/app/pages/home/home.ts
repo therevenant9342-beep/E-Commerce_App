@@ -1,8 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product/product'; 
 import { CartService } from '../../services/cart/cart';
 import { Product } from '../../models/product.model';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth';
+import { ToastrService } from 'ngx-toastr'; 
 
 @Component({
   selector: 'app-home',
@@ -39,13 +42,18 @@ export class HomeComponent implements OnInit {
     }
   ];
 
+  authService = inject(AuthService);
+  router = inject(Router);
   productService = inject(ProductService);
   cartService = inject(CartService); 
-
+  toastr = inject(ToastrService); 
+  cdr = inject(ChangeDetectorRef);
   ngOnInit() {
     this.productService.getProducts().subscribe({
-      next: (products: Product[]) => {
-        this.trendingProducts = products.slice(0, 4);
+      next: (data: any) => {
+        console.log('Raw API Data:', data);
+        this.trendingProducts = data.slice(0, 4);
+        this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
     });
@@ -61,6 +69,14 @@ export class HomeComponent implements OnInit {
 
   onAddToCart(product: Product, event: Event) {
     event.stopPropagation();
+    
+    if (!this.authService.isLoggedIn()) {
+      this.toastr.warning('Please log in first to add items to your cart.', 'Authentication Required');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.cartService.addToCart(product);
+    this.toastr.success('Item added to cart!', 'Success');
   }
 }

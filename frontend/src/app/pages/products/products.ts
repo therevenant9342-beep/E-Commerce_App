@@ -1,9 +1,12 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product/product';
 import { CartService } from '../../services/cart/cart';
 import { Product } from '../../models/product.model';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth/auth';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-products',
@@ -13,7 +16,6 @@ import { Product } from '../../models/product.model';
   styleUrls: ['./products.css']
 })
 export class ProductsComponent implements OnInit {
-  // Upgraded from any[] to Product[] for better TypeScript safety
   products: Product[] = [];
   filteredProducts: Product[] = [];
   categories: string[] = [];
@@ -23,7 +25,11 @@ export class ProductsComponent implements OnInit {
   minPrice: number | null = null;
   maxPrice: number | null = null;
 
+  authService = inject(AuthService);
+  router = inject(Router);
   cartService = inject(CartService);
+  toastr = inject(ToastrService);
+  cdr = inject(ChangeDetectorRef);
 
   constructor(private productService: ProductService) {}
 
@@ -33,6 +39,7 @@ export class ProductsComponent implements OnInit {
         this.products = data;
         this.filteredProducts = data;
         this.categories = [...new Set(data.map(p => p.category))];
+        this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
     });
@@ -58,8 +65,15 @@ export class ProductsComponent implements OnInit {
   }
 
   onAddToCart(product: Product, event: Event) {
-    event.stopPropagation(); 
+    event.stopPropagation();
     
+    if (!this.authService.isLoggedIn()) {
+      this.toastr.warning('Please log in first to add items to your cart.', 'Authentication Required');
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.cartService.addToCart(product);
+    this.toastr.success('Item added to cart!', 'Success');
   }
 }

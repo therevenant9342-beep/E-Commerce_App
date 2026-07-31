@@ -15,7 +15,7 @@
         </div>
         }
     
-        @if (product.stock > 0) {
+        @if ((product.stock ?? 0) > 0) {
         <span class="stock-badge">In Stock: {{ product.stock }}</span>
         } @else {
         <span class="out-of-stock">Out of Stock</span>

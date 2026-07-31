@@ -8,15 +8,17 @@ import { Checkout } from './pages/checkout/checkout';
 import { About } from './pages/about/about';
 import { Contact } from './pages/contact/contact';
 import { ProductDetailsComponent } from './pages/product-details/product-details';
-
+import { authGuard } from './guards/auth-guard';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products', component: ProductsComponent },
-  { path: 'products/:id', component: ProductDetailsComponent }, // Moved above the wildcard
+  { path: 'products/:id', component: ProductDetailsComponent }, 
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'cart', component: CartComponent },
-  { path: 'checkout', component: Checkout },
+  
+  { path: 'cart', component: CartComponent, canActivate: [authGuard] },
+  { path: 'checkout', component: Checkout, canActivate: [authGuard] },
+  
   { path: 'about', component: About },
   { path: 'contact', component: Contact },
   
