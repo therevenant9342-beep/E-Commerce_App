@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product/product'; 
 import { CartService } from '../../services/cart/cart';
@@ -14,9 +14,10 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   trendingProducts: Product[] = [];
   currentSlide = 0;
+  slideInterval: any;
   
   slides = [
     { image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070', title: 'Welcome to E-Commerce', subtitle: 'Discover the best products at unbeatable prices.' },
@@ -48,33 +49,62 @@ export class HomeComponent implements OnInit {
   cartService = inject(CartService); 
   toastr = inject(ToastrService); 
   cdr = inject(ChangeDetectorRef);
+
   ngOnInit() {
     this.productService.getProducts().subscribe({
       next: (data: any) => {
-        console.log('Raw API Data:', data);
         this.trendingProducts = data.slice(0, 4);
         this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
     });
+
+    this.startSlider();
+  }
+
+  ngOnDestroy() {
+    this.stopSlider();
+  }
+
+  startSlider() {
+    this.stopSlider(); 
+    
+    this.slideInterval = setInterval(() => {
+      this.nextSlide();
+    }, 4000);
+  }
+
+  stopSlider() {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+    }
   }
 
   nextSlide() {
     this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+    this.cdr.detectChanges(); 
   }
 
   prevSlide() {
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+    this.cdr.detectChanges(); 
+  }
+
+  setSlide(index: number) {
+    this.currentSlide = index;
+    this.cdr.detectChanges(); 
+    this.stopSlider();
+    this.startSlider();
   }
 
   addToCart(product: Product, event: Event) {
-  event.stopPropagation();
+    event.stopPropagation();
 
-  this.cartService.addToCart(product).subscribe({
-    next: (res) => {
-      this.toastr.success('Item added to cart!', 'Success');
-    },
-    error: (err) => console.error(err)
-  });
-}
+    this.cartService.addToCart(product).subscribe({
+      next: (res) => {
+        this.toastr.success('Item added to cart!', 'Success');
+      },
+      error: (err) => console.error(err)
+    });
+  }
 }

@@ -1,10 +1,11 @@
 <div class="home-container">
 
-    <section class="hero-slider">
+    <section class="hero-slider" (mouseenter)="stopSlider()" (mouseleave)="startSlider()">
 
+        <!-- Render ALL slides, use CSS to hide/show them -->
         @for (slide of slides; track $index) {
-        @if ($index === currentSlide) {
-        <div class="slide" [style.backgroundImage]="'url(' + slide.image + ')'">
+        <div class="slide" [class.active]="$index === currentSlide"
+            [style.backgroundImage]="'url(' + slide.image + ')'">
             <div class="hero-content">
                 <h1>{{ slide.title }}</h1>
                 <p>{{ slide.subtitle }}</p>
@@ -12,14 +13,13 @@
             </div>
         </div>
         }
-        }
 
         <button class="slider-nav prev" (click)="prevSlide()">&#10094;</button>
         <button class="slider-nav next" (click)="nextSlide()">&#10095;</button>
 
         <div class="slider-dots">
             @for (slide of slides; track $index) {
-            <span class="dot" [class.active]="$index === currentSlide" (click)="currentSlide = $index">
+            <span class="dot" [class.active]="$index === currentSlide" (click)="setSlide($index)">
             </span>
             }
         </div>
