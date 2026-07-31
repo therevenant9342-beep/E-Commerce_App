@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product/product'; 
 import { CartService } from '../../services/cart/cart';
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ import { CartService } from '../../services/cart/cart';
   styleUrls: ['./home.css']
 })
 export class HomeComponent implements OnInit {
-  trendingProducts: any[] = [];
+  trendingProducts: Product[] = [];
   currentSlide = 0;
   
   slides = [
@@ -38,14 +39,12 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor(
-    private productService: ProductService,
-    private cartService: CartService 
-  ) {}
+  productService = inject(ProductService);
+  cartService = inject(CartService); 
 
   ngOnInit() {
     this.productService.getProducts().subscribe({
-      next: (products: any[]) => {
+      next: (products: Product[]) => {
         this.trendingProducts = products.slice(0, 4);
       },
       error: (err) => console.error(err)
@@ -60,7 +59,8 @@ export class HomeComponent implements OnInit {
     this.currentSlide = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
   }
 
-  addToCart(product: any) {
+  onAddToCart(product: Product, event: Event) {
+    event.stopPropagation();
     this.cartService.addToCart(product);
   }
 }

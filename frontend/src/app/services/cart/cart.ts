@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
-
+import { Product } from '../../models/product.model';
 export interface CartItem {
-  product: any;
+  product: Product;
   quantity: number;
 }
 
@@ -11,31 +11,36 @@ export interface CartItem {
 export class CartService {
   cartItems = signal<CartItem[]>([]);
 
-  cartTotal = computed(() => 
-    this.cartItems().reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
-  );
+  cartTotal = computed(() => {
+    return this.cartItems().reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  });
 
-  itemCount = computed(() => 
-    this.cartItems().reduce((acc, item) => acc + item.quantity, 0)
-  );
+  itemCount = computed(() => {
+    return this.cartItems().reduce((count, item) => count + item.quantity, 0);
+  });
 
-  addToCart(product: any) {
+  addToCart(product: Product) {
     this.cartItems.update(items => {
-      const existingItem = items.find(item => item.product._id === product._id);
-      
+      const existingItem = items.find(i => i.product._id === product._id);
       if (existingItem) {
-        return items.map(item => 
-          item.product._id === product._id 
-            ? { ...item, quantity: item.quantity + 1 } 
-            : item
-        );
+        existingItem.quantity += 1;
+        return [...items];
       }
-      
       return [...items, { product, quantity: 1 }];
     });
   }
 
   removeFromCart(productId: string) {
     this.cartItems.update(items => items.filter(item => item.product._id !== productId));
+  }
+
+  updateQuantity(productId: string, quantity: number) {
+    this.cartItems.update(items => {
+      const item = items.find(i => i.product._id === productId);
+      if (item) {
+        item.quantity = quantity;
+      }
+      return [...items];
+    });
   }
 }

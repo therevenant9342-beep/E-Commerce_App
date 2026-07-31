@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart/cart';
-
 @Component({
   selector: 'app-navbar',
   standalone: true,
